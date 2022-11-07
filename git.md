@@ -21,5 +21,3 @@ git remote -v
 git remote add origin https://github.com/allwayup/livelife-root.git
 # 切换git源
 git remote set-url origin https://github.com/allwayup/livelife-root.git
-
-
