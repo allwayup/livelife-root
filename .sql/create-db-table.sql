@@ -59,7 +59,7 @@ CREATE TABLE livelife_config.cf_springboot (
 	CONSTRAINT cf_springboot_pk PRIMARY KEY (cf_sb_id)
 )
 ENGINE=InnoDB
-DEFAULT CHARSET=utf8mb4
+DEFAULT CHARSET=UTF8MB4
 COLLATE=utf8mb4_0900_ai_ci
 COMMENT='JAVA服务启动配置表';
 
