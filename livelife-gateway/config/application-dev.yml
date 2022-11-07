@@ -1,0 +1,13 @@
+server:
+  port: 9527
+spring:
+  application:
+    name: livelife-gateway
+eureka:
+  instance:
+    hostname: livelife-gateway
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
