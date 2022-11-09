@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class JsonUtil {
+public class JsonUtil2 {
 
     /**
      * 0: convertSingle, 1: convertArray, 2: convertCollection, 3: convertMa 4: convertObj
@@ -128,10 +128,10 @@ public class JsonUtil {
     /**
      * Json转单值
      */
-    public static <T> T convertSingle(JSONObject jsonObject, Class<T> tClass) {
+    public static <T> T convertSingle(Object object, Generic2<T> generic) {
         T t;
         try {
-            t = jsonObject.toBean(tClass);
+            t = (T) object;
         } catch (Exception e) {
             return null;
         }
@@ -141,19 +141,19 @@ public class JsonUtil {
     /**
      * Json转数组
      */
-    public static <T> T convertArray(JSONArray jsonArray, Class<T> tClass) {
+    public static <T> T convertArray(JSONArray jsonArray, Generic2<T> generic) {
         if (jsonArray == null || jsonArray.size() < 1) {
             return null;
         }
         T t = null;
         try {
-            Class<?> componentType = tClass.getComponentType();
-            Object[] array = (Object[]) Array.newInstance(componentType, jsonArray.size());
+            Generic2<?> componentType = Generic2.create(generic.getMainClass().getComponentType());
+            Object[] array = (Object[]) Array.newInstance(componentType.getMainClass(), jsonArray.size());
             for (int i = 0; i < jsonArray.size(); i++) {
                 Object obj = null;
-                switch (typeInt(componentType)) {
+                switch (typeInt(componentType.getMainClass())) {
                     case 0:
-                        obj = convertSingle(jsonArray.getJSONObject(i), componentType);
+                        obj = convertSingle(jsonArray.getObj(i), componentType);
                         break;
                     case 1:
                         obj = convertArray(jsonArray.getJSONArray(i), componentType);
@@ -172,6 +172,7 @@ public class JsonUtil {
             }
             t = (T) array;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
         return t;
@@ -180,10 +181,10 @@ public class JsonUtil {
     /**
      * Json转集合
      */
-    public static <T> T convertCollection(JSONArray jsonArray, Class<T> tClass) {
+    public static <T> T convertCollection(JSONArray jsonArray, Generic2<T> generic) {
         T t = null;
         try {
-            Collection collection = (Collection) tClass.getDeclaredConstructor().newInstance();
+            Collection collection = (Collection) generic.getMainClass().getDeclaredConstructor().newInstance();
             for (int i = 0; i < jsonArray.size(); i++) {
                 Object obj = null;
 //                switch (typeInt(tClass)) {
@@ -215,7 +216,7 @@ public class JsonUtil {
     /**
      * Json转Map
      */
-    public static <T> T convertMap(JSONObject jsonObject, Class<T> tClass) {
+    public static <T> T convertMap(JSONObject jsonObject, Generic2<T> generic) {
         T t = null;
         try {
 
@@ -228,7 +229,7 @@ public class JsonUtil {
     /**
      * Json转对象
      */
-    public static <T> T convertObj(JSONObject jsonObject, Class<T> tClass) {
+    public static <T> T convertObj(JSONObject jsonObject, Generic2<T> generic) {
         T t = null;
         try {
 
@@ -244,21 +245,22 @@ public class JsonUtil {
     public static <T> T convertObj(String json, Class<T> tClass) {
         T t = null;
         try {
+            Generic2<T> generic = Generic2.create(tClass);
             switch (typeInt(tClass)) {
                 case 0:
-                    t = convertSingle(new JSONObject(json), tClass);
+                    t = convertSingle(new JSONObject(json), generic);
                     break;
                 case 1:
-                    t = convertArray(new JSONArray(json), tClass);
+                    t = convertArray(new JSONArray(json), generic);
                     break;
                 case 2:
-                    t = convertCollection(new JSONArray(json), tClass);
+                    t = convertCollection(new JSONArray(json), generic);
                     break;
                 case 3:
-                    t = convertMap(new JSONObject(json), tClass);
+                    t = convertMap(new JSONObject(json), generic);
                     break;
                 case 4:
-                    t = convertObj(new JSONObject(json), tClass);
+                    t = convertObj(new JSONObject(json), generic);
                     break;
             }
         } catch (Exception e) {
