@@ -27,7 +27,5 @@ git remote -v
 git remote add origin https://github.com/allwayup/livelife-root.git
 # 切换git源
 git remote set-url origin https://github.com/allwayup/livelife-root.git
-# 访问令牌
-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
 # 提交
 git -c https.sslVerify=false -c http.sslVerify=false -c credential.helper= -c core.quotepath=false -c log.showSignature=false push --progress --porcelain origin refs/heads/main:main
